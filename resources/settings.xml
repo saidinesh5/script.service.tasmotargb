@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+    <category label="1000">
+        <setting label="1002" type="text"   id="ip"      default="127.0.0.1"/>
+        <setting label="1003" type="text"   id="port"    default="80"/>
+        <setting type="sep"/>
+        <setting label="1004" type="slider" id="refreshInterval" subsetting="true" default="100" range="100,10,1000" option="int" />
+    </category>
+</settings>

@@ -1,6 +1,4 @@
-This is a hello world popup tutorial for Kodi.
-
-It is meant to be used as a guide to making your first Kodi Add-on.
+This is a simple Kodi Addon to control a Tasmota LED Strip.
 
 ============
 Installation
@@ -8,6 +6,9 @@ Installation
 
 Launch Kodi >> Add-ons >> Get More >> .. >> Install from zip file
 
-Feel free to ask any questions on the Kodi Forums.
 
-Enjoy!
+Thanks to
+===
+
+Kodi Hello World Addon template
+Fan art from: https://www.deviantart.com/kissmybrush/art/A-somehow-rainbow-effect-172341202

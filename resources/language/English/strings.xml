@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+    <!-- Main -->
+    <string id="1000">General</string>
+
+    <string id="1001">Enabled</string>
+    <string id="1002">Device IP Address</string>
+    <string id="1003">Device Port</string>
+    <string id="1004">Refresh Interval</string>
+
+</strings>
