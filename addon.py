@@ -25,6 +25,8 @@ class Settings:
         self.refreshInterval = addon.getSettingInt("refreshInterval")
         self.ip = addon.getSettingString("ip")
         self.port = addon.getSettingString("port")
+        self.captureWidth = 32
+        self.captureHeight = 32
 
 class Tasmota:
     def __init__(self, settings):
@@ -37,13 +39,13 @@ class Tasmota:
         
     def initialize(self):
         #TODO: Move these to Settings
-        requests.get(self._remoteUrl,
-                     params = {'cmnd': 'SaveData 0'})
+        #Disable SaveData to flash to save the flash from too many writes
+        #requests.get(self._remoteUrl,
+        #             params = {'cmnd': 'SaveData 0'})
         requests.get(self._remoteUrl,
                      params = {'cmnd': 'Fade 1'})
         requests.get(self._remoteUrl,
                      params = {'cmnd': 'Speed 10'})
-        self.enablePower(True)
     
     def sendRGB(self, r, g, b):
         if r != self._r or g != self._g or b != self._b:
@@ -60,16 +62,45 @@ class Tasmota:
             requests.get(self._remoteUrl,
                          params = {'cmnd': 'Power {}'.format(['OFF', 'ON'][int(bool(status))])} )
 
+class PlayerMonitor(xbmc.Player):
+    def __init__(self, settings, capture, *args, **kwargs):
+        super(xbmc.Player, self).__init__(*args, **kwargs)
+        self._settings = settings
+        self._capture = capture
+        self._isPlaying = False
+
+    def onPlayBackStopped(self):
+        self._isPlaying = False
+
+    def onPlayBackPaused(self):
+        self._isPlaying = False
+
+    def onPlayBackEnded(self):
+        self._isPlaying = False
+
+    def onPlayBackStarted(self):
+        self._isPlaying = True
+        self._capture.capture(self._settings.captureWidth,
+                              self._settings.captureHeight)
+
+    def onPlayBackResumed(self):
+        self._isPlaying = True
+        self._capture.capture(self._settings.captureWidth,
+                              self._settings.captureHeight)
+
+    def isPlaying(self):
+        return self._isPlaying
+
 def main():
     settings = Settings(addon)
     tasmota = Tasmota(settings)
     capture = xbmc.RenderCapture()
-    capture.capture(32, 32)
+    player = PlayerMonitor(settings = settings, capture = capture)
 
     while not xbmc.abortRequested:
         xbmc.sleep(settings.refreshInterval)
         
-        if settings.enabled:
+        if settings.enabled and player.isPlaying():
             width = capture.getWidth()
             height = capture.getHeight()
             pixels = capture.getImage(1000)
